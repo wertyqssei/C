@@ -1,0 +1,112 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+
+using namespace std;
+
+class Fraction {
+public:
+    Fraction(int numerator, int denominator) {
+        this->numerator = numerator;
+        this->denominator = denominator;
+        reduce();
+    }
+
+    string toString() {
+        int num = numerator;
+        int den = denominator;
+
+        if (den < 0) {
+            num = -num;
+            den = -den;
+        }
+
+        int whole = num / den;
+        int rem = abs(num % den);
+
+        if (rem == 0) {
+            return to_string(whole);
+        }
+
+        if (whole != 0) {
+            return to_string(whole) + " " + to_string(rem) + "/" + to_string(den);
+        }
+
+        return to_string(num) + "/" + to_string(den);
+    }
+
+    double toDouble() {
+        return (double)numerator / denominator;
+    }
+
+    Fraction plus(Fraction that) {
+        int num = numerator * that.denominator + that.numerator * denominator;
+        int den = denominator * that.denominator;
+        return Fraction(num, den);
+    }
+
+    Fraction minus(Fraction that) {
+        int num = numerator * that.denominator - that.numerator * denominator;
+        int den = denominator * that.denominator;
+        return Fraction(num, den);
+    }
+
+    Fraction times(Fraction that) {
+        int num = numerator * that.numerator;
+        int den = denominator * that.denominator;
+        return Fraction(num, den);
+    }
+
+    Fraction by(Fraction that) {
+        int num = numerator * that.denominator;
+        int den = denominator * that.numerator;
+        return Fraction(num, den);
+    }
+
+private:
+    int numerator;
+    int denominator;
+
+    int gcd(int a, int b) {
+        a = abs(a);
+        b = abs(b);
+
+        while (b != 0) {
+            int t = b;
+            b = a % b;
+            a = t;
+        }
+
+        return a;
+    }
+
+    void reduce() {
+        int div = gcd(numerator, denominator);
+
+        numerator /= div;
+        denominator /= div;
+
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+    }
+};
+
+int main() {
+    int n1, d1, n2, d2;
+    char slash;
+
+    cin >> n1 >> slash >> d1;
+    cin >> n2 >> slash >> d2;
+
+    Fraction f1(n1, d1);
+    Fraction f2(n2, d2);
+
+    cout << f1.toString() << " + " << f2.toString() << " = " << f1.plus(f2).toString() << endl;
+    cout << f1.toString() << " - " << f2.toString() << " = " << f1.minus(f2).toString() << endl;
+    cout << f1.toString() << " * " << f2.toString() << " = " << f1.times(f2).toString() << endl;
+    cout << f1.toString() << " / " << f2.toString() << " = " << f1.by(f2).toString() << endl;
+
+    return 0;
+}
