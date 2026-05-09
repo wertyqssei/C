@@ -1,0 +1,64 @@
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+
+int main() {
+    const int ROWS = 5;
+    const int COLS = 5;
+
+    int matrix[ROWS][COLS];
+
+    srand(time(0));
+
+    int* ptr = &matrix[0][0];
+
+    // Заповнення масиву випадковими числами
+    for (int i = 0; i < ROWS * COLS; i++) {
+        *(ptr + i) = rand() % 100;
+    }
+
+    cout << "Масив:\n" << endl;
+
+    // Виведення масиву
+    ptr = &matrix[0][0];
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            cout.width(4);
+            cout << *(ptr + i * COLS + j);
+        }
+        cout << endl;
+    }
+
+    cout << "\nЕлементи головної діагоналі: ";
+
+    // Головна діагональ
+    for (int i = 0; i < ROWS; i++) {
+        cout << *(ptr + i * COLS + i) << " ";
+    }
+
+    cout << "\nЕлементи побічної діагоналі: ";
+
+    // Побічна діагональ
+    for (int i = 0; i < ROWS; i++) {
+        cout << *(ptr + i * COLS + (COLS - 1 - i)) << " ";
+    }
+
+    int evenCount = 0;
+    int oddCount = 0;
+
+    // Підрахунок парних і непарних
+    for (int i = 0; i < ROWS * COLS; i++) {
+        if (*(ptr + i) % 2 == 0) {
+            evenCount++;
+        } else {
+            oddCount++;
+        }
+    }
+
+    cout << "\n\nКількість парних елементів: " << evenCount << endl;
+    cout << "Кількість непарних елементів: " << oddCount << endl;
+
+    return 0;
+}
