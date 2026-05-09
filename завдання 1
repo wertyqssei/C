@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+#include <map>
+
+using namespace std;
+
+int main()
+{
+    string values;
+    getline(cin, values);
+
+    string text;
+    getline(cin, text);
+
+    map<string, string> data;
+
+    int start = 0;
+
+    while(start < values.size())
+    {
+        int comma = values.find(',', start);
+
+        if(comma == string::npos)
+            comma = values.size();
+
+        string pair = values.substr(start, comma - start);
+
+        int eq = pair.find('=');
+
+        string key = pair.substr(0, eq);
+        string value = pair.substr(eq + 1);
+
+        data[key] = value;
+
+        start = comma + 1;
+    }
+
+    int pos = 0;
+
+    while((pos = text.find('[', pos)) != string::npos)
+    {
+        int end = text.find(']', pos);
+
+        if(end == string::npos)
+            break;
+
+        string key = text.substr(pos + 1, end - pos - 1);
+
+        if(data.count(key))
+        {
+            text.replace(pos, end - pos + 1, data[key]);
+            pos += data[key].size();
+        }
+        else
+        {
+            pos = end + 1;
+        }
+    }
+
+    cout << text << endl;
+
+    return 0;
+}
