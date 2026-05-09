@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+class IPAddress{
+protected:
+    string ip;
+public:
+    IPAddress(string ip){
+        this->ip = ip;
+    }
+
+    IPAddress(const IPAddress& other){
+        ip = other.ip;
+    }
+
+    virtual void print(){
+        cout << ip;
+    }
+};
+
+class IPAddressChecked : public IPAddress{
+    bool correct;
+
+    bool validate(string ip){
+        stringstream ss(ip);
+        string part;
+        int count = 0;
+        while(getline(ss, part, '.')){
+            if(part.empty() || part.size() > 3) return false;
+            for(char c : part) if(!isdigit(c)) return false;
+            int num = stoi(part);
+            if(num < 0 || num > 255) return false;
+            count++;
+        }
+        return count == 4;
+    }
+
+public:
+    IPAddressChecked(string ip) : IPAddress(ip){
+        correct = validate(ip);
+    }
+
+    IPAddressChecked(const IPAddressChecked& other) : IPAddress(other){
+        correct = other.correct;
+    }
+
+    void print(){
+        cout << ip << " - " << (correct ? "Correct" : "Not Correct");
+    }
+};
+
+int main(){
+    string ip1, ip2, ip3;
+    cin >> ip1 >> ip2 >> ip3;
+
+    IPAddress a(ip1);
+    IPAddressChecked b(ip2);
+    IPAddressChecked c(ip3);
+
+    a.print();
+    cout << endl;
+    b.print();
+    cout << endl;
+    c.print();
+
+    return 0;
+}
