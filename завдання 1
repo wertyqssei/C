@@ -1,0 +1,84 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+
+class Fraction{
+public:
+    Fraction(int n, int d){
+        numerator = n;
+        denominator = d;
+        reduce();
+    }
+
+    string toString(){
+        int n = numerator;
+        int d = denominator;
+        if(abs(n) >= abs(d)){
+            int whole = n / d;
+            int rem = abs(n % d);
+            if(rem == 0) return to_string(whole);
+            return to_string(whole) + " " + to_string(rem) + "/" + to_string(abs(d));
+        }
+        return to_string(n) + "/" + to_string(d);
+    }
+
+    double toDouble(){
+        return (double)numerator / denominator;
+    }
+
+    bool isGreaterThan(Fraction that){
+        return toDouble() > that.toDouble();
+    }
+
+    bool isLessThan(Fraction that){
+        return toDouble() < that.toDouble();
+    }
+
+    bool isEqual(Fraction that){
+        return toDouble() == that.toDouble();
+    }
+
+private:
+    int numerator;
+    int denominator;
+
+    int gcd(int a, int b){
+        while(b){
+            int t = b;
+            b = a % b;
+            a = t;
+        }
+        return abs(a);
+    }
+
+    void reduce(){
+        int g = gcd(numerator, denominator);
+        numerator /= g;
+        denominator /= g;
+        if(denominator < 0){
+            numerator *= -1;
+            denominator *= -1;
+        }
+    }
+};
+
+int main(){
+    int n1, d1, n2, d2;
+    char slash;
+
+    cin >> n1 >> slash >> d1;
+    cin >> n2 >> slash >> d2;
+
+    Fraction f1(n1, d1);
+    Fraction f2(n2, d2);
+
+    if(f1.isGreaterThan(f2))
+        cout << f1.toString() << " > " << f2.toString();
+    else if(f1.isLessThan(f2))
+        cout << f1.toString() << " < " << f2.toString();
+    else
+        cout << f1.toString() << " = " << f2.toString();
+
+    return 0;
+}
